@@ -1,216 +1,211 @@
 # LaTeX Cheatsheet
 
-## Dokumentstruktur
+## Document structure
 
 ```latex
 \documentclass[a4paper, 12pt]{article}
-% Präambel: Pakete & Einstellungen
+% Preamble: packages & settings
 
 \begin{document}
-  % Inhalt hier
+  % content here
 \end{document}
 ```
 
-`article` · `report` · `letter` — häufige Dokumenttypen  
-Optionen: `10pt` / `11pt` / `12pt`, `a4paper`, `twocolumn`
+Common document classes: `article` · `report` · `letter`  
+Options: `10pt` / `11pt` / `12pt`, `a4paper`, `twocolumn`
 
 ---
 
-## Wichtige Pakete
+## Useful packages
 
-| Paket | Zweck |
+| Package | Purpose |
 |---|---|
-| `geometry` | Seitenränder: `[top=2cm, left=2.5cm, ...]` |
-| `babel` | Sprache: `[ngerman]` |
-| `inputenc` | UTF-8 Input: `[utf8]` |
-| `fontenc` | Schrift-Encoding: `[T1]` |
-| `graphicx` | Bilder einbinden |
-| `hyperref` | Klickbare Links + PDF-Metadaten |
-| `enumitem` | Listen anpassen |
-| `xcolor` | Farben: `\textcolor{red}{Text}` |
-| `multicol` | Mehrspaltenlayout |
+| `geometry` | Page margins: `[top=2cm, left=2.5cm, ...]` |
+| `babel` | Language: `[ngerman]` / `[english]` |
+| `inputenc` | UTF-8 input: `[utf8]` |
+| `fontenc` | Font encoding: `[T1]` |
+| `graphicx` | Include images |
+| `hyperref` | Clickable links + PDF metadata |
+| `enumitem` | Customize lists |
+| `xcolor` | Colors: `\textcolor{red}{text}` |
+| `fancyhdr` | Custom header/footer |
 
 ---
 
-## Textformatierung
+## Text formatting
 
 ```latex
-\textbf{fett}
-\textit{kursiv}
-\underline{unterstrichen}
+\textbf{bold}
+\textit{italic}
+\underline{underlined}
 \texttt{monospace}
 
-% Größen (von klein nach groß):
+% Sizes (small to large):
 \tiny  \small  \normalsize  \large  \Large  \LARGE  \huge  \Huge
 ```
 
-Sonderzeichen müssen escaped werden: `\& \% \$ \# \_ \{ \}`
+Special characters must be escaped: `\& \% \$ \# \_ \{ \}`
 
 ---
 
-## Abstände & Ausrichtung
+## Spacing & alignment
 
 ```latex
-\vspace{1cm}      % vertikaler Abstand
-\hspace{1cm}      % horizontaler Abstand
-\hfill            % füllt bis zum rechten Rand
-\vfill            % füllt bis zum Seitenende
-\noindent         % keine Einrückung
-\\                % Zeilenumbruch (nur innerhalb von Absätzen/Tabellen)
-\\[0.5cm]         % Zeilenumbruch + extra Abstand
-\newpage          % neue Seite
+\vspace{1cm}      % vertical space
+\hspace{1cm}      % horizontal space
+\hfill            % push content to the right
+\vfill            % push content to the bottom
+\noindent         % suppress indentation
+\\                % line break (inside paragraphs/tables)
+\\[0.5cm]         % line break + extra space
+\newpage          % new page
 ```
 
-Leerzeile im Code = neuer Absatz.
+A blank line in source = new paragraph.
 
 ---
 
-## Listen
+## Lists
 
 ```latex
-\begin{itemize}         % Aufzählung
-  \item Erster Punkt
-  \item Zweiter Punkt
+\begin{itemize}         % bullet list
+  \item First
+  \item Second
 \end{itemize}
 
-\begin{enumerate}       % Nummerierte Liste
-  \item Erster
-  \item Zweiter
+\begin{enumerate}       % numbered list
+  \item First
+  \item Second
 \end{enumerate}
 
-\begin{description}     % Begriffsliste
-  \item[Begriff] Erklärung
+\begin{description}     % definition list
+  \item[Term] Explanation
 \end{description}
 ```
 
-Mit `enumitem` Abstände anpassen:
+Adjust spacing with `enumitem`:
 ```latex
 \setlist{noitemsep, topsep=2pt, leftmargin=1em}
 ```
 
 ---
 
-## Tabellen
+## Tables
 
 ```latex
-\begin{tabular}{l c r}        % l=links, c=mitte, r=rechts
-  Spalte 1 & Spalte 2 & Spalte 3 \\
+\begin{tabular}{l c r}        % l=left, c=center, r=right
+  Col 1 & Col 2 & Col 3 \\
   \hline
-  A        & B        & C \\
+  A     & B     & C \\
 \end{tabular}
 ```
 
-- `|` zwischen Spaltentypen → vertikale Linie
-- `@{}` → kein automatischer Abstand an der Seite
-- `\hline` → horizontale Linie
+- `|` between column types → vertical line
+- `@{}` → remove automatic side padding
+- `\hline` → horizontal line
 
 ---
 
-## Bilder
+## Images
 
 ```latex
 \usepackage{graphicx}
 
-\includegraphics[width=5cm]{bild.jpg}
-\includegraphics[width=0.8\linewidth]{bild.png}
-\includegraphics[scale=0.5]{bild.pdf}
+\includegraphics[width=5cm]{image.jpg}
+\includegraphics[width=0.8\linewidth]{image.png}
+\includegraphics[scale=0.5]{image.pdf}
 ```
 
 ---
 
-## Eigene Befehle (`\newcommand`)
+## Custom commands (`\newcommand`)
 
 ```latex
-% Variable (kein Argument):
-\newcommand{\MeinName}{Magnus Eschrich}
-% Aufruf: \MeinName
+% Variable (no argument):
+\newcommand{\MyName}{Magnus Eschrich}
+% Usage: \MyName
 
-% Mit einem Argument:
-\newcommand{\fett}[1]{\textbf{#1}}
-% Aufruf: \fett{Text}
+% With one argument:
+\newcommand{\bold}[1]{\textbf{#1}}
+% Usage: \bold{text}
 
-% Mit zwei Argumenten:
+% With two arguments:
 \newcommand{\cvjob}[2]{\textbf{#1} \hfill \textit{#2}}
-% Aufruf: \cvjob{Firma}{2023-2025}
+% Usage: \cvjob{Company}{2023--2025}
 ```
 
 ---
 
-## Nützliche Umgebungen
+## Useful environments
 
 ```latex
-% Nebeneinander (zwei Spalten manuell):
+% Side by side (manual two columns):
 \begin{minipage}[t]{0.48\linewidth}
-  Linker Inhalt
+  Left content
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.48\linewidth}
-  Rechter Inhalt
+  Right content
 \end{minipage}
 
-% Mehrspaltenlayout (braucht multicol):
-\begin{multicols}{3}
-  Inhalt wird automatisch auf 3 Spalten verteilt
-\end{multicols}
-
-% Zentriert:
+% Centered:
 \begin{center}
-  Zentrierter Text oder Bild
+  Centered text or image
 \end{center}
 ```
 
-`[t]` bei minipage = oben ausrichten (top), `[b]` = unten (bottom), `[c]` = mitte
+`[t]` on minipage = align top, `[b]` = bottom, `[c]` = center
 
 ---
 
-## Mathe
+## Math
 
 ```latex
-% Inline (im Fließtext):
+% Inline:
 $a^2 + b^2 = c^2$
 
-% Block (eigene Zeile, zentriert):
+% Block (centered on its own line):
 \[ E = mc^2 \]
 
-% Hoch- und tiefgestellt:
+% Superscript and subscript:
 x^{2}    x_{i}    x^{2}_{i}
 
-% Bruch und Wurzel:
-\frac{Zähler}{Nenner}    \sqrt{x}    \sqrt[3]{x}
+% Fraction and square root:
+\frac{numerator}{denominator}    \sqrt{x}    \sqrt[3]{x}
 
-% Griechische Buchstaben:
+% Greek letters:
 \alpha  \beta  \gamma  \delta  \pi  \sigma  \omega
 ```
 
 ---
 
-## Kompilieren
+## Compiling
 
 ```bash
-# Einmal kompilieren:
-pdflatex datei.tex
+# Single pass:
+pdflatex file.tex
 
-# Mit eigenem Ausgabeverzeichnis:
-pdflatex -output-directory=gen datei.tex
+# With custom output directory:
+pdflatex -output-directory=out file.tex
 
-# 2x für Inhaltsverzeichnis / Querverweise:
-pdflatex datei.tex && pdflatex datei.tex
+# Two passes (for table of contents / cross-references):
+pdflatex file.tex && pdflatex file.tex
 ```
 
-Erzeugte Dateien:
-- `.pdf` — das Ergebnis
-- `.log` — Compiler-Log (Fehler stehen hier drin)
-- `.aux` — Hilfsdaten für Querverweise
-- `.toc` — Inhaltsverzeichnis-Daten
+Generated files:
+- `.pdf` — the result
+- `.log` — compiler log (errors are here)
+- `.aux` — auxiliary data for cross-references
+- `.toc` — table of contents data
 
 ---
 
-## Häufige Fehler
+## Common errors
 
-| Fehler | Ursache |
+| Error | Cause |
 |---|---|
-| `! LaTeX Error: File 'xyz.sty' not found` | Paket nicht installiert |
-| `! Undefined control sequence` | Tippfehler im Befehl, oder Paket fehlt |
-| `! Missing $ inserted` | Mathe-Symbol außerhalb von `$...$` |
-| `Overfull \hbox` | Text zu breit für die Zeile (kein Fehler, nur Warnung) |
-| `Unknown option 'ngerman'` | `texlive-langgerman` fehlt |
+| `! LaTeX Error: File 'xyz.sty' not found` | Package not installed |
+| `! Undefined control sequence` | Typo in command, or missing package |
+| `! Missing $ inserted` | Math symbol used outside `$...$` |
+| `Overfull \hbox` | Text too wide for the line (warning only) |
+| `Unknown option 'ngerman'` | `texlive-langgerman` not installed |

@@ -1,38 +1,57 @@
-# LaTeX Applications
+# latex-application-template
 
-Bewerbungsunterlagen in LaTeX.
+LaTeX template for job applications — cover letter and CV.
 
-## Struktur
+## Structure
 
 ```
-applications/
-├── tex/            # Quelldateien
-│   ├── anschreiben.tex
-│   └── lebenslauf.tex
-├── cover-letter/   # generierte PDFs (Anschreiben)
-├── cv/             # generierte PDFs (Lebenslauf)
-├── log/            # Compiler-Logs
-├── build.sh        # Build-Script
-├── cheatsheet.md   # LaTeX Referenz
-└── README.md
+application-LaTeX/
+├── tex/                  # shared components
+│   ├── data.tex          # personal information
+│   ├── header.tex        # CV header (name, title, photo)
+│   ├── sidebar.tex       # cover letter sidebar
+│   └── footer.tex        # shared footer
+├── cv/
+│   ├── cv.tex            # CV source
+│   └── cv.pdf            # generated (gitignored)
+├── cover-letter/
+│   ├── cover-letter.tex  # cover letter source
+│   └── cover-letter-<company>.pdf
+├── companies/            # one JSON per application
+│   └── example.json
+├── img/                  # profile photo
+├── log/                  # compiler logs (gitignored)
+├── build.sh
+└── cheatsheet.md
 ```
 
-## Bauen
+## Usage
 
 ```bash
-./build.sh
+# Cover letter only
+./build.sh --json companies/example.json
+
+# Cover letter + CV
+./build.sh --json companies/example.json --cv
 ```
 
-Kompiliert alle `.tex`-Dateien und legt die PDFs in die jeweiligen Ordner:
-- `tex/anschreiben.tex` → `cover-letter/anschreiben.pdf`
-- `tex/lebenslauf.tex`  → `cv/lebenslauf.pdf`
+The output PDF is named after the JSON file: `cover-letter-example.pdf`.
 
-Logs landen in `log/`.
+## Adding a new application
 
-## Neue Datei hinzufügen
+Create a JSON file in `companies/`:
 
-1. `.tex`-Datei in `tex/` erstellen
-2. In `build.sh` eine neue `compile`-Zeile ergänzen:
-   ```bash
-   compile "$TEX/meinedatei.tex" "$ROOT/zielordner"
-   ```
+```json
+{
+  "company": "Acme Corp",
+  "job_title": "Backend Developer",
+  "salutation": "Dear Hiring Team,",
+  "content": "Your letter text here.\n\n\\vspace{0.4cm}\n\nSecond paragraph."
+}
+```
+
+Content is raw LaTeX — use `\\vspace{0.4cm}` between paragraphs.
+
+## Personal data
+
+Edit `tex/data.tex` to update your name, contact info, and photo.
