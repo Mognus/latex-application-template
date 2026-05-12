@@ -1,0 +1,10 @@
+{
+  "name":    "Your Name",
+  "title":   "Your Job Title",
+  "phone":   "+49 000 0000000",
+  "email":   "you@example.com",
+  "address": "Street 1, 12345 City",
+  "github":  "github.com/yourhandle",
+  "web":     "yourwebsite.com",
+  "photo":   "../img/profile.png"
+}

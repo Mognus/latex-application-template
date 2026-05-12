@@ -6,36 +6,50 @@ LaTeX template for job applications — cover letter and CV.
 
 ```
 application-LaTeX/
-├── tex/                  # shared components
-│   ├── data.tex          # personal information
-│   ├── header.tex        # CV header (name, title, photo)
-│   ├── sidebar.tex       # cover letter sidebar
-│   └── footer.tex        # shared footer
+├── tex/                        # shared LaTeX components
+│   ├── header.tex              # CV header (name, title, photo)
+│   ├── sidebar.tex             # cover letter sidebar
+│   └── footer.tex              # shared footer
 ├── cv/
-│   ├── cv.tex            # CV source
-│   └── cv.pdf            # generated (gitignored)
+│   ├── cv.tex                  # CV source
+│   └── cv.pdf                  # generated (gitignored)
 ├── cover-letter/
-│   ├── cover-letter.tex  # cover letter source
-│   └── cover-letter-<company>.pdf
-├── companies/            # one JSON per application
+│   ├── cover-letter.tex        # cover letter source
+│   └── cover-letter-<slug>.pdf # generated (gitignored)
+├── companies/                  # one JSON file per application
 │   └── example.json
-├── img/                  # profile photo
-├── log/                  # compiler logs (gitignored)
+├── img/                        # profile photo
+├── personal-data.json          # your personal info (name, contact, photo)
+├── personal-data-template.json # copy this to get started
 ├── build.sh
 └── cheatsheet.md
+```
+
+## Setup
+
+Copy the template and fill in your details:
+
+```bash
+cp personal-data-template.json personal-data.json
 ```
 
 ## Usage
 
 ```bash
-# Cover letter only
-./build.sh --json companies/example.json
+# Cover letter only (uses personal-data.json by default)
+./build.sh --json=companies/example.json
 
 # Cover letter + CV
-./build.sh --json companies/example.json --cv
+./build.sh --json=companies/example.json --cv
+
+# Custom output name
+./build.sh --json=companies/example.json --output=my-application
+
+# Different personal data file
+./build.sh --json=companies/example.json --personal=other-person.json
 ```
 
-The output PDF is named after the JSON file: `cover-letter-example.pdf`.
+Output PDF is named `cover-letter-<slug>.pdf` where slug is the JSON filename (or `--output` if specified).
 
 ## Adding a new application
 
@@ -54,4 +68,17 @@ Content is raw LaTeX — use `\\vspace{0.4cm}` between paragraphs.
 
 ## Personal data
 
-Edit `tex/data.tex` to update your name, contact info, and photo.
+Edit `personal-data.json` to update your name, contact info, and photo path:
+
+```json
+{
+  "name":    "Your Name",
+  "title":   "Your Job Title",
+  "phone":   "+49 000 0000000",
+  "email":   "you@example.com",
+  "address": "Street 1, 12345 City",
+  "github":  "github.com/yourhandle",
+  "web":     "yourwebsite.com",
+  "photo":   "../img/profile.png"
+}
+```

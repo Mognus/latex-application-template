@@ -10,6 +10,21 @@ cleanup() {
 }
 trap cleanup EXIT
 
+generate_data_tex() {
+  local json="$1"
+  mkdir -p "$TMP"
+  {
+    printf '\\newcommand{\\Name}{%s}\n'    "$(jq -r '.name'    "$json")"
+    printf '\\newcommand{\\Title}{%s}\n'   "$(jq -r '.title'   "$json")"
+    printf '\\newcommand{\\Phone}{%s}\n'   "$(jq -r '.phone'   "$json")"
+    printf '\\newcommand{\\Email}{%s}\n'   "$(jq -r '.email'   "$json")"
+    printf '\\newcommand{\\Address}{%s}\n' "$(jq -r '.address' "$json")"
+    printf '\\newcommand{\\Github}{%s}\n'  "$(jq -r '.github'  "$json")"
+    printf '\\newcommand{\\Web}{%s}\n'     "$(jq -r '.web'     "$json")"
+    printf '\\newcommand{\\Photo}{%s}\n'   "$(jq -r '.photo'   "$json")"
+  } > "$TMP/data.tex"
+}
+
 generate_content_tex() {
   local json="$1"
   mkdir -p "$TMP"
@@ -38,32 +53,39 @@ compile() {
 }
 
 # --- Parse arguments --------------------------------------------------------
+# Usage: ./build.sh --json=<path> [--personal=<path>] [--output=<name>] [--cv]
 json_file=""
+personal_file="$ROOT/personal-data.json"
+output_name=""
 build_cv=false
 
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --json) json_file="$2"; shift 2 ;;
-    --cv)   build_cv=true; shift ;;
-    *)      echo "Unknown argument: $1" >&2; exit 1 ;;
+for arg in "$@"; do
+  case "$arg" in
+    --json=*)     json_file="${arg#--json=}" ;;
+    --personal=*) personal_file="${arg#--personal=}" ;;
+    --output=*)   output_name="${arg#--output=}" ;;
+    --cv)         build_cv=true ;;
+    *)            echo "Unknown argument: $arg" >&2; exit 1 ;;
   esac
 done
 
 if [[ -z "$json_file" ]]; then
-  echo "Usage: $0 --json <path/to/job.json> [--cv]" >&2
+  echo "Usage: $0 --json=<path/to/job.json> [--personal=<path>] [--output=<name>] [--cv]" >&2
   exit 1
 fi
 
-[[ "$json_file" = /* ]] && json_path="$json_file" || json_path="$ROOT/$json_file"
+# [[ expr ]] && a || b is shorthand for: if [[ expr ]]; then a; else b; fi
+# [[ expr ]] || { ... } is shorthand for: if [[ ! expr ]]; then ...; fi
+[[ "$json_file"     = /* ]] && json_path="$json_file"         || json_path="$ROOT/$json_file"
+[[ "$personal_file" = /* ]] && personal_path="$personal_file" || personal_path="$ROOT/$personal_file"
 
-if [[ ! -f "$json_path" ]]; then
-  echo "Error: $json_path not found" >&2
-  exit 1
-fi
+[[ -f "$json_path"     ]] || { echo "Error: $json_path not found" >&2;     exit 1; }
+[[ -f "$personal_path" ]] || { echo "Error: $personal_path not found" >&2; exit 1; }
 
-slug="$(basename "$json_file" .json)"
+slug="${output_name:-$(basename "$json_file" .json)}"
 # ---------------------------------------------------------------------------
 
+generate_data_tex    "$personal_path"
 generate_content_tex "$json_path"
 
 $build_cv && compile "$ROOT/cv/cv.tex" "$ROOT/cv"

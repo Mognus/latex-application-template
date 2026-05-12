@@ -1,3 +1,6 @@
+# Personal data
+personal-data.json
+
 # Build artifacts
 .tmp/
 log/
