@@ -1,0 +1,109 @@
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\setlist{noitemsep, topsep=3pt, leftmargin=1em}
+
+\input{../tex/data}
+\input{../tex/footer}
+
+% Abschnittsüberschrift mit Linie
+\newcommand{\cvsection}[1]{%
+  \vspace{0.4cm}%
+  {\large\bfseries\MakeUppercase{#1}}\\[-0.1cm]%
+  \rule{\linewidth}{0.4pt}%
+  \vspace{0.15cm}%
+}
+
+\begin{document}
+
+% ---- KOPFZEILE ----
+\input{../tex/header}
+
+% ---- ZWEISPALTIG ----
+\begin{minipage}[t]{0.33\textwidth}
+\vspace{0pt}
+
+\cvsection{Kontakt}
+\begin{tabular}{@{}l l}
+  Tel.    & \MeinTel \\[2pt]
+  Mail    & \small\MeineMail \\[2pt]
+  Adresse & \MeineAdresse \\[2pt]
+  GitHub  & \MeinGithub \\[2pt]
+  Web     & \MeineWeb \\
+\end{tabular}
+
+\cvsection{Bildung}
+\textbf{2022 -- 2025}\\
+Andreas Gordon Schule\\
+\textit{Berufsschule}
+
+\vspace{0.3cm}
+
+\textbf{August 2021}\\
+Goetheschule Ilmenau
+
+\cvsection{Fähigkeiten}
+\begin{itemize}
+  \item Python | Django | Django-REST-Framework
+  \item React | Next.js | TypeScript | Tailwind CSS | ShadCN | Playwright | i18n
+  \item React-Native/Expo (basics)
+  \item PostgreSQL | TimescaleDB | Docker | Git | GitLab CI/CD
+  \item Responsive Design | Websockets
+  \item Intermediate Linux Kenntnisse (Filesystem, Bash, Ricing etc.)
+  \item KI-Tooling wie Claude-Code
+  \item Go (privat, Grundkenntnisse)
+\end{itemize}
+
+\cvsection{Sprachen}
+\begin{itemize}
+  \item Deutsch: Fließend (Muttersprache)
+  \item Englisch: Fließend
+\end{itemize}
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.63\textwidth}
+\vspace{0pt}
+
+\cvsection{Profil Zusammenfassung}
+\begin{itemize}
+  \item Junger, praxisstarker Fullstack-Webentwickler aus Thüringen mit abgeschlossener Berufsausbildung (bester Absolvent IHK Südthüringen 2025)
+  \item Von August 2025 bis Januar 2026 festangestellt bei der Sielaff GmbH \& Co.\ KG
+  \item Beherrscht modernes Python/Django-Backend und React/Next.js-Frontend auf Produktionsniveau, inkl.\ Docker-Deployment
+  \item Suche neue Herausforderungen im Großraum Jena/Erfurt/Remote -- idealerweise Fullstack, Backend- oder DevOps-nah, aber auch für reines UI Development offen
+\end{itemize}
+
+\cvsection{Berufserfahrung}
+
+\textbf{Sielaff Software and Service GmbH \& Co.\ KG (Ilmenau)}
+\hfill \textit{Aug 2025 -- Jan 2026}\\
+Fullstack Webentwickler
+\begin{itemize}
+  \item Weiterentwicklung, Neuentwicklung, Wartung von internen Webanwendungen im Industrie-4.0-Umfeld
+  \item Fullstack-Verantwortung: Backend mit Django/DRF, Frontend mit React/Next.js
+  \item Containerisierung und Deployment mit Docker, teilweise GitLab CI/CD-Pipelines
+  \item Echtzeit-Kommunikation via Websockets
+  \item Datenbank-Design und Optimierung
+\end{itemize}
+
+\vspace{0.35cm}
+
+\textbf{Sielaff Software and Service GmbH \& Co.\ KG (Ilmenau)}
+\hfill \textit{Ende 2022 -- Mitte 2025}\\
+Ausbildung Fachinformatiker für Anwendungsentwicklung
+\begin{itemize}
+  \item 3-jährige duale Ausbildung mit Schwerpunkt Fullstack-Webentwicklung
+  \item Entwicklung von REST-APIs, modernen Frontend-Oberflächen und internen Automatisierungs-Tools
+  \item Bester Absolvent der IHK Südthüringen 2025
+\end{itemize}
+
+\end{minipage}
+
+\end{document}

@@ -1,0 +1,14 @@
+# Build artifacts
+.tmp/
+log/
+
+# Generated PDFs
+cv/*.pdf
+cover-letter/*.pdf
+
+# LaTeX auxiliary files
+*.aux
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
