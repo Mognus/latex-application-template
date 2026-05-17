@@ -74,21 +74,7 @@ Create a local JSON file in `companies/`. Company JSON files are ignored by Git 
 }
 ```
 
-Content is raw LaTeX — use `\\vspace{0.4cm}` between paragraphs.
-
-For bilingual application data, add language-specific fields:
-
-```json
-{
-  "company": "Acme Corp",
-  "job_title": "Backend Developer",
-  "job_title_en": "Backend Developer",
-  "salutation": "Sehr geehrte Damen und Herren,",
-  "salutation_en": "Dear Hiring Team,",
-  "content": "German letter text.",
-  "content_en": "English letter text."
-}
-```
+Content is raw LaTeX — use `\\vspace{0.4cm}` between paragraphs. The `--lang` option only selects the LaTeX template, so create separate JSON files when the letter content itself needs another language.
 
 ## Personal data
 

@@ -27,13 +27,12 @@ generate_data_tex() {
 
 generate_content_tex() {
   local json="$1"
-  local language="$2"
   mkdir -p "$TMP"
   {
-    printf '\\newcommand{\\Company}{%s}\n'    "$(jq -r '.company' "$json")"
-    printf '\\newcommand{\\JobTitle}{%s}\n'   "$(jq -r --arg lang "$language" 'if $lang == "en" then (.job_title_en // .en.job_title // .job_title) else (.job_title_de // .de.job_title // .job_title) end' "$json")"
-    printf '\\newcommand{\\Salutation}{%s}\n' "$(jq -r --arg lang "$language" 'if $lang == "en" then (.salutation_en // .en.salutation // .salutation) else (.salutation_de // .de.salutation // .salutation) end' "$json")"
-    printf '\\newcommand{\\JobContent}{%%\n%s\n}\n' "$(jq -r --arg lang "$language" 'if $lang == "en" then (.content_en // .en.content // .content) else (.content_de // .de.content // .content) end' "$json")"
+    printf '\\newcommand{\\Company}{%s}\n'    "$(jq -r '.company'    "$json")"
+    printf '\\newcommand{\\JobTitle}{%s}\n'   "$(jq -r '.job_title'  "$json")"
+    printf '\\newcommand{\\Salutation}{%s}\n' "$(jq -r '.salutation' "$json")"
+    printf '\\newcommand{\\JobContent}{%%\n%s\n}\n' "$(jq -r '.content' "$json")"
   } > "$TMP/content.tex"
 }
 
@@ -96,7 +95,7 @@ slug="${output_name:-$(basename "$json_file" .json)}"
 # ---------------------------------------------------------------------------
 
 generate_data_tex    "$personal_path"
-generate_content_tex "$json_path" "$language"
+generate_content_tex "$json_path"
 
 if [[ "$language" == "en" ]]; then
   cv_source="$ROOT/cv/cv-en.tex"
