@@ -11,18 +11,19 @@ application-LaTeX/
 │   ├── sidebar.tex             # cover letter sidebar
 │   └── footer.tex              # shared footer
 ├── cv/
-│   ├── cv.tex                  # CV source
-│   └── cv.pdf                  # generated (gitignored)
+│   ├── cv.tex                  # German CV source
+│   ├── cv-en.tex               # English CV source
+│   └── gen/                    # generated CV PDFs (gitignored, .gitkeep tracked)
 ├── cover-letter/
-│   ├── cover-letter.tex        # cover letter source
-│   └── cover-letter-<slug>.pdf # generated (gitignored)
-├── companies/                  # one JSON file per application
-│   └── example.json
+│   ├── cover-letter.tex        # German cover letter source
+│   ├── cover-letter-en.tex     # English cover letter source
+│   └── gen/                    # generated cover letter PDFs (gitignored, .gitkeep tracked)
+├── companies/                  # local JSON files per application (gitignored)
+│   └── .gitkeep
 ├── img/                        # profile photo
 ├── personal-data.json          # your personal info (name, contact, photo)
 ├── personal-data-template.json # copy this to get started
-├── build.sh
-└── cheatsheet.md
+└── build.sh
 ```
 
 ## Setup
@@ -42,6 +43,9 @@ cp personal-data-template.json personal-data.json
 # Cover letter + CV
 ./build.sh --json=companies/example.json --cv
 
+# English cover letter + CV
+./build.sh --json=companies/example.json --cv --lang=en
+
 # Custom output name
 ./build.sh --json=companies/example.json --output=my-application
 
@@ -49,11 +53,17 @@ cp personal-data-template.json personal-data.json
 ./build.sh --json=companies/example.json --personal=other-person.json
 ```
 
-Output PDF is named `cover-letter-<slug>.pdf` where slug is the JSON filename (or `--output` if specified).
+Generated PDFs are written to:
+
+- `cover-letter/gen/cover-letter-<slug>.pdf`
+- `cover-letter/gen/cover-letter-en-<slug>.pdf` when using `--lang=en`
+- `cv/gen/cv.pdf` or `cv/gen/cv-en.pdf` when using `--cv`
+
+The slug is the JSON filename or the value passed via `--output`.
 
 ## Adding a new application
 
-Create a JSON file in `companies/`:
+Create a local JSON file in `companies/`. Company JSON files are ignored by Git so application specific data stays local.
 
 ```json
 {
@@ -65,6 +75,20 @@ Create a JSON file in `companies/`:
 ```
 
 Content is raw LaTeX — use `\\vspace{0.4cm}` between paragraphs.
+
+For bilingual application data, add language-specific fields:
+
+```json
+{
+  "company": "Acme Corp",
+  "job_title": "Backend Developer",
+  "job_title_en": "Backend Developer",
+  "salutation": "Sehr geehrte Damen und Herren,",
+  "salutation_en": "Dear Hiring Team,",
+  "content": "German letter text.",
+  "content_en": "English letter text."
+}
+```
 
 ## Personal data
 

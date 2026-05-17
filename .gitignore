@@ -8,6 +8,14 @@ log/
 # Generated PDFs
 cv/*.pdf
 cover-letter/*.pdf
+cv/gen/*
+!cv/gen/.gitkeep
+cover-letter/gen/*
+!cover-letter/gen/.gitkeep
+
+# Application targets
+companies/*
+!companies/.gitkeep
 
 # LaTeX auxiliary files
 *.aux
