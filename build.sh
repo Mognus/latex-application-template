@@ -108,6 +108,6 @@ else
   cover_letter_output="cover-letter-$slug"
 fi
 
-$build_cv && compile "$cv_source" "$ROOT/cv"
+$build_cv && compile "$cv_source" "$ROOT/cv/gen"
 
-compile "$cover_letter_source" "$ROOT/cover-letter" "$cover_letter_output"
+compile "$cover_letter_source" "$ROOT/cover-letter/gen" "$cover_letter_output"
