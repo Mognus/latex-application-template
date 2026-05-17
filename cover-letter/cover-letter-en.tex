@@ -1,0 +1,45 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[top=2cm, bottom=2cm, left=1.5cm, right=1.5cm]{geometry}
+
+\setlength{\parindent}{0pt}
+
+\input{../.tmp/data}
+\input{../tex/footer}
+
+\input{../.tmp/content}
+
+\begin{document}
+
+\begin{minipage}[t]{0.28\textwidth}
+  \input{../tex/sidebar-en}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.65\textwidth}
+\vspace{0pt}
+
+\hfill \today
+
+\vspace{0.8cm}
+
+\textbf{Application for \JobTitle\ at \Company}
+
+\vspace{0.4cm}
+
+\Salutation
+
+\vspace{0.4cm}
+
+\JobContent
+
+\vspace{0.8cm}
+
+Sincerely \\[1cm]
+\Name
+
+\end{minipage}
+
+\end{document}
