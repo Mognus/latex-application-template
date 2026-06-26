@@ -36,18 +36,35 @@ generate_content_tex() {
   } > "$TMP/content.tex"
 }
 
-generate_abilities_tex() {
-  local json="$1"
-  mkdir -p "$TMP"
-  # Flatten categories -> abilities into \abilitysection / \ability macro calls.
-  # esc escapes the LaTeX special characters that can appear in names/keywords.
-  jq -r '
+# Render a category slice [from:to) into \abilitysection / \ability macro calls.
+# Categories stack sequentially; spacing comes from the macros themselves.
+# esc escapes the LaTeX special characters that can appear in names/keywords.
+_abilities_slice() {
+  local json="$1" from="$2" to="$3"
+  jq -r --argjson from "$from" --argjson to "$to" '
     def esc: gsub("&";"\\&") | gsub("%";"\\%") | gsub("#";"\\#") | gsub("_";"\\_");
-    .categories[] |
+    .categories[$from:$to][] |
     "\\abilitysection{\(.name|esc)}",
     (.abilities[] |
       "\\ability{\(.name|esc)}{\(.level)}{\((.keywords // []) | map(esc) | join(" · "))}")
-  ' "$json" > "$TMP/abilities.tex"
+  ' "$json"
+}
+
+generate_abilities_tex() {
+  local json="$1"
+  mkdir -p "$TMP"
+  local total mid
+  # Balance the two columns by ability count, keeping categories intact.
+  mid=$(jq '
+    [.categories[].abilities | length] as $c
+    | (($c | add) + 1) / 2 | floor as $half
+    | (reduce range(0; ($c | length)) as $i ({sum: 0, idx: 0};
+        if .sum >= $half then . else {sum: (.sum + $c[$i]), idx: ($i + 1)} end))
+    | .idx
+  ' "$json")
+  total=$(jq '.categories | length' "$json")
+  _abilities_slice "$json" 0      "$mid"   > "$TMP/abilities-left.tex"
+  _abilities_slice "$json" "$mid" "$total" > "$TMP/abilities-right.tex"
 }
 
 compile() {

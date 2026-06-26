@@ -6,12 +6,13 @@
 \usepackage[top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm]{geometry}
 \usepackage{graphicx}
 \usepackage{xcolor}
-\usepackage{multicol}
 
 \setlength{\parindent}{0pt}
 
 \input{../.tmp/data}
 \input{../tex/footer}
+
+\newcommand{\HeaderExtra}{Skills Profile}
 
 \definecolor{abfill}{gray}{0.25}
 \definecolor{abempty}{gray}{0.82}
@@ -31,9 +32,11 @@
   \textcolor{abempty}{\rule[-0.1ex]{\dimexpr0.28cm*\numexpr10-#1\relax\relax}{0.5em}}%
 }
 
-% Ability: name, level, sub-keywords
+% Ability: name (wrappable), proficiency bar on the right, sub-keywords below
 \newcommand{\ability}[3]{%
-  {\bfseries #1}\hfill\abilitybar{#2}\par
+  \begin{minipage}[t]{\dimexpr\linewidth-3cm\relax}\raggedright\bfseries #1\end{minipage}%
+  \hfill
+  \begin{minipage}[t]{2.8cm}\raggedleft\abilitybar{#2}\end{minipage}\par
   \if\relax\detokenize{#3}\relax\else{\footnotesize\textcolor{abkw}{#3}\par}\fi
   \vspace{5pt}%
 }
@@ -43,10 +46,13 @@
 % ---- HEADER ----
 \input{../tex/header}
 
-\vspace{0.2cm}
+\vspace{0.3cm}
 
-\begin{multicols}{2}
-\input{../.tmp/abilities}
-\end{multicols}
+\begin{minipage}[t]{0.46\textwidth}
+\input{../.tmp/abilities-left}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.46\textwidth}
+\input{../.tmp/abilities-right}
+\end{minipage}
 
 \end{document}

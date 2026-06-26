@@ -1,3 +1,6 @@
+% Optional document subtitle shown above the rule; empty unless a document sets it.
+\providecommand{\HeaderExtra}{}
+
 \begin{minipage}[t]{0.72\textwidth}
   \vspace{0pt}
   {\Huge\bfseries \Name}\\[0.25cm]
@@ -11,4 +14,6 @@
 \end{minipage}
 
 \vspace{0.3cm}
+% Subtitle scaled as a fraction of the name (0.64 of \Huge); tweak the factor to taste.
+\if\relax\detokenize\expandafter{\HeaderExtra}\relax\else\scalebox{0.64}{\Huge\bfseries\HeaderExtra}\par\vspace{0.15cm}\fi
 \rule{\linewidth}{0.6pt}

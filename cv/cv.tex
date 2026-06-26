@@ -13,7 +13,9 @@
 \input{../.tmp/data}
 \input{../tex/footer}
 
-% Abschnittsüberschrift mit Linie
+\newcommand{\HeaderExtra}{Lebenslauf}
+
+% Section heading with line
 \newcommand{\cvsection}[1]{%
   \vspace{0.4cm}%
   {\large\bfseries\MakeUppercase{#1}}\\[-0.1cm]%
@@ -23,10 +25,10 @@
 
 \begin{document}
 
-% ---- KOPFZEILE ----
+% ---- HEADER ----
 \input{../tex/header}
 
-% ---- ZWEISPALTIG ----
+% ---- TWO COLUMNS ----
 \begin{minipage}[t]{0.44\textwidth}
 \vspace{0pt}
 \raggedright
