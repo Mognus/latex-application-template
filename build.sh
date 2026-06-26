@@ -36,6 +36,20 @@ generate_content_tex() {
   } > "$TMP/content.tex"
 }
 
+generate_abilities_tex() {
+  local json="$1"
+  mkdir -p "$TMP"
+  # Flatten categories -> abilities into \abilitysection / \ability macro calls.
+  # esc escapes the LaTeX special characters that can appear in names/keywords.
+  jq -r '
+    def esc: gsub("&";"\\&") | gsub("%";"\\%") | gsub("#";"\\#") | gsub("_";"\\_");
+    .categories[] |
+    "\\abilitysection{\(.name|esc)}",
+    (.abilities[] |
+      "\\ability{\(.name|esc)}{\(.level)}{\((.keywords // []) | map(esc) | join(" · "))}")
+  ' "$json" > "$TMP/abilities.tex"
+}
+
 compile() {
   local src="$1"
   local out="$2"
@@ -56,25 +70,29 @@ compile() {
 # Usage: ./build.sh --json=<path> [--personal=<path>] [--output=<name>] [--cv] [--lang=de|en]
 json_file=""
 personal_file="$ROOT/personal-data.json"
+abilities_file=""
 output_name=""
 build_cv=false
+build_abilities=false
 language="de"
 
 for arg in "$@"; do
   case "$arg" in
-    --json=*)     json_file="${arg#--json=}" ;;
-    --personal=*) personal_file="${arg#--personal=}" ;;
-    --output=*)   output_name="${arg#--output=}" ;;
-    --cv)         build_cv=true ;;
-    --lang=*)     language="${arg#--lang=}" ;;
-    --de)         language="de" ;;
-    --en)         language="en" ;;
-    *)            echo "Unknown argument: $arg" >&2; exit 1 ;;
+    --json=*)           json_file="${arg#--json=}" ;;
+    --personal=*)       personal_file="${arg#--personal=}" ;;
+    --abilities-json=*) abilities_file="${arg#--abilities-json=}" ;;
+    --abilities)        build_abilities=true ;;
+    --output=*)         output_name="${arg#--output=}" ;;
+    --cv)               build_cv=true ;;
+    --lang=*)           language="${arg#--lang=}" ;;
+    --de)               language="de" ;;
+    --en)               language="en" ;;
+    *)                  echo "Unknown argument: $arg" >&2; exit 1 ;;
   esac
 done
 
-if [[ -z "$json_file" ]]; then
-  echo "Usage: $0 --json=<path/to/job.json> [--personal=<path>] [--output=<name>] [--cv] [--lang=de|en]" >&2
+if [[ -z "$json_file" && "$build_cv" == false && "$build_abilities" == false ]]; then
+  echo "Usage: $0 [--json=<path>] [--cv] [--abilities] [--personal=<path>] [--output=<name>] [--lang=de|en]" >&2
   exit 1
 fi
 
@@ -85,28 +103,47 @@ esac
 
 # [[ expr ]] && a || b is shorthand for: if [[ expr ]]; then a; else b; fi
 # [[ expr ]] || { ... } is shorthand for: if [[ ! expr ]]; then ...; fi
-[[ "$json_file"     = /* ]] && json_path="$json_file"         || json_path="$ROOT/$json_file"
 [[ "$personal_file" = /* ]] && personal_path="$personal_file" || personal_path="$ROOT/$personal_file"
-
-[[ -f "$json_path"     ]] || { echo "Error: $json_path not found" >&2;     exit 1; }
 [[ -f "$personal_path" ]] || { echo "Error: $personal_path not found" >&2; exit 1; }
-
-slug="${output_name:-$(basename "$json_file" .json)}"
 # ---------------------------------------------------------------------------
 
-generate_data_tex    "$personal_path"
-generate_content_tex "$json_path"
+# Personal data feeds the shared header and footer, so it is always generated.
+generate_data_tex "$personal_path"
 
+# Pick the language specific source files.
 if [[ "$language" == "en" ]]; then
   cv_source="$ROOT/cv/cv-en.tex"
   cover_letter_source="$ROOT/cover-letter/cover-letter-en.tex"
-  cover_letter_output="cover-letter-en-$slug"
+  ability_sheet_source="$ROOT/ability-sheet/ability-sheet-en.tex"
+  cover_letter_prefix="cover-letter-en"
+  ability_sheet_output="ability-sheet-en"
 else
   cv_source="$ROOT/cv/cv.tex"
   cover_letter_source="$ROOT/cover-letter/cover-letter.tex"
-  cover_letter_output="cover-letter-$slug"
+  ability_sheet_source="$ROOT/ability-sheet/ability-sheet.tex"
+  cover_letter_prefix="cover-letter"
+  ability_sheet_output="ability-sheet"
 fi
 
+# Cover letter (only when a company JSON is given).
+if [[ -n "$json_file" ]]; then
+  [[ "$json_file" = /* ]] && json_path="$json_file" || json_path="$ROOT/$json_file"
+  [[ -f "$json_path" ]] || { echo "Error: $json_path not found" >&2; exit 1; }
+  slug="${output_name:-$(basename "$json_file" .json)}"
+  generate_content_tex "$json_path"
+  compile "$cover_letter_source" "$ROOT/cover-letter/gen" "$cover_letter_prefix-$slug"
+fi
+
+# CV
 $build_cv && compile "$cv_source" "$ROOT/cv/gen"
 
-compile "$cover_letter_source" "$ROOT/cover-letter/gen" "$cover_letter_output"
+# Ability sheet (reusable, language specific JSON).
+if [[ "$build_abilities" == true ]]; then
+  if [[ -z "$abilities_file" ]]; then
+    [[ "$language" == "en" ]] && abilities_file="$ROOT/abilities-en.json" || abilities_file="$ROOT/abilities.json"
+  fi
+  [[ "$abilities_file" = /* ]] && abilities_path="$abilities_file" || abilities_path="$ROOT/$abilities_file"
+  [[ -f "$abilities_path" ]] || { echo "Error: $abilities_path not found" >&2; exit 1; }
+  generate_abilities_tex "$abilities_path"
+  compile "$ability_sheet_source" "$ROOT/ability-sheet/gen" "$ability_sheet_output"
+fi

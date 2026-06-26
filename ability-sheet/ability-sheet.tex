@@ -1,0 +1,52 @@
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{multicol}
+
+\setlength{\parindent}{0pt}
+
+\input{../.tmp/data}
+\input{../tex/footer}
+
+\definecolor{abfill}{gray}{0.25}
+\definecolor{abempty}{gray}{0.82}
+\definecolor{abkw}{gray}{0.45}
+
+% Abschnittsüberschrift mit Linie
+\newcommand{\abilitysection}[1]{%
+  \vspace{0.3cm}%
+  {\large\bfseries\MakeUppercase{#1}}\\[-0.1cm]%
+  \rule{\linewidth}{0.4pt}%
+  \vspace{0.2cm}%
+}
+
+% Level-Balken, Stufe 0..10
+\newcommand{\abilitybar}[1]{%
+  \textcolor{abfill}{\rule[-0.1ex]{\dimexpr0.28cm*#1\relax}{0.5em}}%
+  \textcolor{abempty}{\rule[-0.1ex]{\dimexpr0.28cm*\numexpr10-#1\relax\relax}{0.5em}}%
+}
+
+% Fähigkeit: Name, Level, Sub-Keywords
+\newcommand{\ability}[3]{%
+  {\bfseries #1}\hfill\abilitybar{#2}\par
+  \if\relax\detokenize{#3}\relax\else{\footnotesize\textcolor{abkw}{#3}\par}\fi
+  \vspace{5pt}%
+}
+
+\begin{document}
+
+% ---- KOPFZEILE ----
+\input{../tex/header}
+
+\vspace{0.2cm}
+
+\begin{multicols}{2}
+\input{../.tmp/abilities}
+\end{multicols}
+
+\end{document}

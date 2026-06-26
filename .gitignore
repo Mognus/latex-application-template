@@ -1,5 +1,8 @@
 # Personal data
 personal-data.json
+personal-data-en.json
+abilities.json
+abilities-en.json
 
 # Build artifacts
 .tmp/
@@ -12,6 +15,8 @@ cv/gen/*
 !cv/gen/.gitkeep
 cover-letter/gen/*
 !cover-letter/gen/.gitkeep
+ability-sheet/gen/*
+!ability-sheet/gen/.gitkeep
 
 # Application targets
 companies/*
