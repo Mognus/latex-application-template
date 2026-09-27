@@ -54,13 +54,27 @@ generate_abilities_tex() {
   local json="$1"
   mkdir -p "$TMP"
   local total mid
-  # Balance the two columns by ability count, keeping categories intact.
+  # Split the categories across two columns as evenly as possible,
+  # never breaking a category apart. We test every possible boundary and
+  # keep the one whose left/right ability counts are closest to equal.
+  # (The old approach stopped at the first boundary past the halfway mark,
+  # which overshot when a big category straddled the middle.)
   mid=$(jq '
-    [.categories[].abilities | length] as $c
-    | (($c | add) + 1) / 2 | floor as $half
-    | (reduce range(0; ($c | length)) as $i ({sum: 0, idx: 0};
-        if .sum >= $half then . else {sum: (.sum + $c[$i]), idx: ($i + 1)} end))
-    | .idx
+    # counts[i] = number of abilities in category i
+    [.categories[].abilities | length] as $counts
+    | ($counts | add)    as $totalAbilities
+    | ($counts | length) as $categoryCount
+
+    # imbalance(k): how lopsided the split is when the first k categories
+    # go left and the rest go right. 0 means perfectly even.
+    | def imbalance($k):
+        ($counts[0:$k] | add) as $left
+        | ($left - ($totalAbilities - $left)) | fabs;
+
+    # Consider every boundary k = 1 .. categoryCount-1, pick the evenest.
+    [ range(1; $categoryCount) ]
+    | (if length == 0 then [1] else . end)   # safety net: single category
+    | min_by( imbalance(.) )
   ' "$json")
   total=$(jq '.categories | length' "$json")
   _abilities_slice "$json" 0      "$mid"   > "$TMP/abilities-left.tex"
@@ -129,15 +143,15 @@ generate_data_tex "$personal_path"
 
 # Pick the language specific source files.
 if [[ "$language" == "en" ]]; then
-  cv_source="$ROOT/cv/cv-en.tex"
-  cover_letter_source="$ROOT/cover-letter/cover-letter-en.tex"
-  ability_sheet_source="$ROOT/ability-sheet/ability-sheet-en.tex"
+  cv_source="$ROOT/tex/cv-en.tex"
+  cover_letter_source="$ROOT/tex/cover-letter-en.tex"
+  ability_sheet_source="$ROOT/tex/ability-sheet-en.tex"
   cover_letter_prefix="cover-letter-en"
   ability_sheet_output="ability-sheet-en"
 else
-  cv_source="$ROOT/cv/cv.tex"
-  cover_letter_source="$ROOT/cover-letter/cover-letter.tex"
-  ability_sheet_source="$ROOT/ability-sheet/ability-sheet.tex"
+  cv_source="$ROOT/tex/cv.tex"
+  cover_letter_source="$ROOT/tex/cover-letter.tex"
+  ability_sheet_source="$ROOT/tex/ability-sheet.tex"
   cover_letter_prefix="cover-letter"
   ability_sheet_output="ability-sheet"
 fi
@@ -148,11 +162,11 @@ if [[ -n "$json_file" ]]; then
   [[ -f "$json_path" ]] || { echo "Error: $json_path not found" >&2; exit 1; }
   slug="${output_name:-$(basename "$json_file" .json)}"
   generate_content_tex "$json_path"
-  compile "$cover_letter_source" "$ROOT/cover-letter/gen" "$cover_letter_prefix-$slug"
+  compile "$cover_letter_source" "$ROOT/gen/cover-letter" "$cover_letter_prefix-$slug"
 fi
 
 # CV
-$build_cv && compile "$cv_source" "$ROOT/cv/gen"
+$build_cv && compile "$cv_source" "$ROOT/gen/cv"
 
 # Ability sheet (reusable, language specific JSON).
 if [[ "$build_abilities" == true ]]; then
@@ -162,5 +176,5 @@ if [[ "$build_abilities" == true ]]; then
   [[ "$abilities_file" = /* ]] && abilities_path="$abilities_file" || abilities_path="$ROOT/$abilities_file"
   [[ -f "$abilities_path" ]] || { echo "Error: $abilities_path not found" >&2; exit 1; }
   generate_abilities_tex "$abilities_path"
-  compile "$ability_sheet_source" "$ROOT/ability-sheet/gen" "$ability_sheet_output"
+  compile "$ability_sheet_source" "$ROOT/gen/ability-sheet" "$ability_sheet_output"
 fi

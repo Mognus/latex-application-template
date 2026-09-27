@@ -9,14 +9,7 @@ abilities-en.json
 log/
 
 # Generated PDFs
-cv/*.pdf
-cover-letter/*.pdf
-cv/gen/*
-!cv/gen/.gitkeep
-cover-letter/gen/*
-!cover-letter/gen/.gitkeep
-ability-sheet/gen/*
-!ability-sheet/gen/.gitkeep
+gen/
 
 # Application targets
 companies/*

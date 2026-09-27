@@ -6,18 +6,14 @@ LaTeX template for job applications — cover letter and CV.
 
 ```
 application-LaTeX/
-├── tex/                        # shared LaTeX components
+├── tex/                        # LaTeX templates and shared components
+│   ├── cv.tex                  # German CV source (also cv-en.tex)
+│   ├── cover-letter.tex        # German cover letter (also cover-letter-en.tex)
+│   ├── ability-sheet.tex       # German skills profile (also ability-sheet-en.tex)
 │   ├── header.tex              # CV header (name, title, photo)
 │   ├── sidebar.tex             # cover letter sidebar
 │   └── footer.tex              # shared footer
-├── cv/
-│   ├── cv.tex                  # German CV source
-│   ├── cv-en.tex               # English CV source
-│   └── gen/                    # generated CV PDFs (gitignored, .gitkeep tracked)
-├── cover-letter/
-│   ├── cover-letter.tex        # German cover letter source
-│   ├── cover-letter-en.tex     # English cover letter source
-│   └── gen/                    # generated cover letter PDFs (gitignored, .gitkeep tracked)
+├── gen/                        # generated PDFs (gitignored)
 ├── companies/                  # local JSON files per application (gitignored)
 │   └── .gitkeep
 ├── img/                        # profile photo
@@ -55,9 +51,10 @@ cp personal-data-template.json personal-data.json
 
 Generated PDFs are written to:
 
-- `cover-letter/gen/cover-letter-<slug>.pdf`
-- `cover-letter/gen/cover-letter-en-<slug>.pdf` when using `--lang=en`
-- `cv/gen/cv.pdf` or `cv/gen/cv-en.pdf` when using `--cv`
+- `gen/cover-letter/cover-letter-<slug>.pdf`
+- `gen/cover-letter/cover-letter-en-<slug>.pdf` when using `--lang=en`
+- `gen/cv/cv.pdf` or `gen/cv/cv-en.pdf` when using `--cv`
+- `gen/ability-sheet/ability-sheet.pdf` or `ability-sheet-en.pdf` when using `--abilities`
 
 The slug is the JSON filename or the value passed via `--output`.
 

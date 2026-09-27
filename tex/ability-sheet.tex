@@ -3,14 +3,14 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
-\usepackage[top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm]{geometry}
+\usepackage[top=1.2cm, bottom=1.2cm, left=1.4cm, right=1.4cm]{geometry}
 \usepackage{graphicx}
 \usepackage{xcolor}
 
 \setlength{\parindent}{0pt}
 
 \input{../.tmp/data}
-\input{../tex/footer}
+\input{footer}
 
 \newcommand{\HeaderExtra}{Kompetenzprofil}
 
@@ -20,10 +20,10 @@
 
 % Section heading with line
 \newcommand{\abilitysection}[1]{%
-  \vspace{0.3cm}%
+  \vspace{0.16cm}%
   {\large\bfseries\MakeUppercase{#1}}\\[-0.1cm]%
   \rule{\linewidth}{0.4pt}%
-  \vspace{0.2cm}%
+  \vspace{0.12cm}%
 }
 
 % Proficiency bar, level 0..10
@@ -38,13 +38,13 @@
   \hfill
   \begin{minipage}[t]{2.8cm}\raggedleft\abilitybar{#2}\end{minipage}\par
   \if\relax\detokenize{#3}\relax\else{\footnotesize\textcolor{abkw}{#3}\par}\fi
-  \vspace{5pt}%
+  \vspace{3pt}%
 }
 
 \begin{document}
 
 % ---- HEADER ----
-\input{../tex/header}
+\input{header}
 
 \vspace{0.3cm}
 
